@@ -1,14 +1,15 @@
 # balls 
 
-import glob, py_midicsv as pm
+import os, py_midicsv as pm
 from operator import itemgetter
 
 output_file = open('output.txt', 'w+')
 
 # iterates over every file in the folder and checks whether it is a *.mid file
-for file in glob.glob('cum/*.mid'):
+directory = os.listdir('cum')
+for file in directory:
     print('Currently processing file ' + file)
-    csv = pm.midi_to_csv(file)
+    csv = pm.midi_to_csv('cum/' + file)
 
     events = []
 
