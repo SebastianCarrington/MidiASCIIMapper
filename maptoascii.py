@@ -19,7 +19,7 @@ for file in directory:
             line_split = line.split(', ')
             if line_split[2] == 'Note_on_c':
                 # note on events
-                time = int(int(line_split[1])/4)
+                time = int(line_split[1])
                 note = chr(int(line_split[4]))
                 velocity = int(line_split[5])
 
@@ -39,8 +39,9 @@ for file in directory:
     # thank fuck for stackoverflow (<https://stackoverflow.com/questions/10695139/sort-a-list-of-tuples-by-2nd-item-integer-value>)
     events = sorted(events, key=itemgetter(1))
 
-    current_notes = [' ']
+    current_notes = []
     last_time = 0
+    line_break = 0
 
     for event in events:
         time = event[1]
@@ -55,8 +56,17 @@ for file in directory:
                 current_notes.remove(note)
 
         for i in range(times):
+            if len(current_notes) == 0:
+                output_file.write(' ')
             for n in current_notes:
                 output_file.write(n)
+
+        if line_break == 20:
+            output_file.write('\n')
+            line_break = 0 
+
+        last_time = time
+        line_break += 1
 
     for i in range(0, 500):
         output_file.write(' ')
