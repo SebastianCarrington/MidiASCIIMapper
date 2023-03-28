@@ -19,7 +19,7 @@ for file in directory:
             line_split = line.split(', ')
             if line_split[2] == 'Note_on_c':
                 # note on events
-                time = int(line_split[1])
+                time = int(int(line_split[1])/4)
                 note = chr(int(line_split[4]))
                 velocity = int(line_split[5])
 
