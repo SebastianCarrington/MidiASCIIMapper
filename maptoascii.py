@@ -9,7 +9,11 @@ output_file = open('output.txt', 'w+')
 directory = os.listdir('cum')
 for file in directory:
     print('Currently processing file ' + file)
-    csv = pm.midi_to_csv('cum/' + file)
+    try:
+        csv = pm.midi_to_csv('cum/' + file)
+    except Exception:
+        print('oops')
+    
 
     events = []
 
