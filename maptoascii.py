@@ -1,27 +1,31 @@
-# balls 
+# balls
 
 import os, py_midicsv as pm
 from operator import itemgetter
 
-output_file = open('output.txt', 'w+')
+
+try:
+    os.remove("./output.txt")
+except:
+    print("oh no")
+output_file = open("./output.txt", "w+")
 
 # iterates over every file in the folder and checks whether it is a *.mid file
-directory = os.listdir('cum')
+directory = os.listdir("cum")
 for file in directory:
-    print('Currently processing file ' + file)
+    print("Currently processing file " + file)
     try:
-        csv = pm.midi_to_csv('cum/' + file)
+        csv = pm.midi_to_csv("cum/" + file)
     except Exception:
-        print('oops')
-    
+        print("oops")
 
     events = []
 
     # iterates over each line in the csv and adds all of the events to a list
     for line in csv:
-        if 'Note' in line:
-            line_split = line.split(', ')
-            if line_split[2] == 'Note_on_c':
+        if "Note" in line:
+            line_split = line.split(", ")
+            if line_split[2] == "Note_on_c":
                 # note on events
                 time = int(line_split[1])
                 note = chr(int(line_split[4]))
@@ -31,7 +35,7 @@ for file in directory:
                     events.append((0, time, note))
                 else:
                     events.append((1, time, note))
-            elif line_split[2] == 'Note_off_c':
+            elif line_split[2] == "Note_off_c":
                 # note off events
                 time = int(line_split[1])
                 note = chr(int(line_split[4]))
@@ -50,7 +54,14 @@ for file in directory:
     for event in events:
         time = event[1]
         note = event[2]
-        times = (time - last_time) + 1
+        times = int(((time - last_time) + 1) / 5)
+
+        for i in range(times):
+            if len(current_notes) == 0:
+                output_file.write(" ")
+            for n in current_notes:
+                output_file.write(n)
+            output_file.write("\n")
 
         if event[0] == 1:
             if note not in current_notes:
@@ -59,18 +70,10 @@ for file in directory:
             if note in current_notes:
                 current_notes.remove(note)
 
-        for i in range(times):
-            if len(current_notes) == 0:
-                output_file.write(' ')
-            for n in current_notes:
-                output_file.write(n)
-
-        if line_break == 20:
-            output_file.write('\n')
-            line_break = 0 
-
-        last_time = time
         line_break += 1
+        last_time = time
 
-    for i in range(0, 500):
-        output_file.write(' ')
+        # print(current_notes)
+
+    for i in range(0, 100):
+        output_file.write("\n")
